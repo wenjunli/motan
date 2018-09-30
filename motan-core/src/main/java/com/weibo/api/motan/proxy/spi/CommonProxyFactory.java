@@ -14,21 +14,26 @@
  *    limitations under the License.
  */
 
-package com.weibo.api.motan.proxy;
+package com.weibo.api.motan.proxy.spi;
 
 import com.weibo.api.motan.cluster.Cluster;
-import com.weibo.api.motan.core.extension.Spi;
+import com.weibo.api.motan.core.extension.SpiMeta;
+import com.weibo.api.motan.proxy.ProxyFactory;
+import com.weibo.api.motan.proxy.RefererCommonHandler;
 
 import java.util.List;
 
 /**
+ * common proxy
  *
- * @author maijunsheng
- *
+ * @author sunnight
  */
-@Spi
-public interface ProxyFactory {
+@SpiMeta(name = "common")
+public class CommonProxyFactory implements ProxyFactory {
 
-    <T> T getProxy(Class<T> clz, List<Cluster<T>> clusters);
-
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getProxy(Class<T> clz, List<Cluster<T>> clusters) {
+        return (T) new RefererCommonHandler(clusters.get(0).getUrl().getPath(), clusters);
+    }
 }
